@@ -1,5 +1,4 @@
 const firebaseAdmin = require("firebase-admin");
-const firebaseConfig = require("./firebase-private.json");
 
 firebaseAdmin.initializeApp({
   credential: firebaseAdmin.credential.cert({
