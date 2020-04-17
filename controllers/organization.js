@@ -3,8 +3,12 @@ const constants = require("../constants");
 const firebase = require("../services/firebase");
 const _ = require("lodash");
 let Organization = require("../models/organization");
+let QR = require("../models/qr");
 const User = require("../models/user");
 const mongoose = require("mongoose");
+const twilio = require("../services/twilio")
+const sendgrid = require("../services/sendgrid")
+
 
 async function create(req, res) {
   try {
@@ -48,6 +52,41 @@ async function create(req, res) {
   }
 }
 
+async function notification(req, res) {
+  try {
+    let { values, shorthand, type } = req.body;
+
+    values = values.split(",")
+    qr = await QR.findOne({ shorthand: shorthand })
+
+    if (!qr) {
+      throw new Error("No campaign found with given shorthand")
+    }
+    let message = `Thanks for doing this. Donate here: ${qr.url}`
+
+    if (type === 'sms') {
+      await Promise.all(values.map(async (val) => {
+        twilio.sendMessage(val, message);
+      }));
+    }
+    else if (type === 'whatsapp') {
+      await Promise.all(values.map(async (val) => {
+        twilio.sendWhatsApp(val, message);
+      }));
+    }
+    else if (type === 'email') {
+      await Promise.all(values.map(async (val) => {
+        sendgrid.sendEmail(val, message);
+      }));
+    }
+
+    return res.status(200).send({ message: "Notifications sent!" });
+  } catch (err) {
+    return handleError(res, err);
+  }
+}
+
 module.exports = {
-  create
+  create,
+  notification
 };

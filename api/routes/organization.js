@@ -4,7 +4,7 @@ let { isAuthenticated, isAuthorized } = require("../../middlewares");
 let { celebrate, Joi } = require("celebrate");
 const route = Router();
 
-let { create, get, patch, remove } = require("../../controllers/organization");
+let { create, notification } = require("../../controllers/organization");
 
 module.exports = app => {
   app.use("/organizations", route);
@@ -45,4 +45,16 @@ module.exports = app => {
   //     }),
   //     get
   //   ]);
+
+  route.post(
+    "/notify",
+    [
+      isAuthenticated,
+      isAuthorized({
+        hasRole: [constants.user.TYPE_MANAGER, constants.user.TYPE_MEMBER]
+      }),
+      notification
+    ]
+  );
+
 };
