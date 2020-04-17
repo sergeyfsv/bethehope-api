@@ -54,7 +54,7 @@ async function create(req, res) {
 
 async function notification(req, res) {
   try {
-    let { values, shorthand, type } = req.body;
+    let { values, shorthand, type, message } = req.body;
 
     values = values.split(",")
     qr = await QR.findOne({ shorthand: shorthand })
@@ -62,7 +62,12 @@ async function notification(req, res) {
     if (!qr) {
       throw new Error("No campaign found with given shorthand")
     }
-    let message = `Thanks for doing this. Donate here: ${qr.url}`
+
+    if (!message.includes("[campaign_url]")) {
+      throw new Error("No campaign_url placeholder found")
+    }
+
+    message = message.replace("[campaign_url]", qr.url);
 
     if (type === 'sms') {
       await Promise.all(values.map(async (val) => {
