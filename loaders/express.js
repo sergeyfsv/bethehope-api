@@ -14,6 +14,10 @@ module.exports = app => {
     res.status(200).send({ message: "Connection Successful" });
   });
 
+  app.get("/", (req, res) => {
+    res.status(200).send(`Welcome to BeTheHope API 😀 [environment: ${config.heroku_env}, build: ${config.node_env}]`);
+  });
+
   // Useful if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
   // It shows the real origin IP in the heroku or Cloudwatch logs
   app.enable("trust proxy");
