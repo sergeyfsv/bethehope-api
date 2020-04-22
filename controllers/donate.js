@@ -28,7 +28,7 @@ async function donate(req, res) {
       throw new Error(`Internal: Stripe source token not provided`);
     }
 
-    let qr = await QR.findOne({ shorthand: req.body.shorthand });
+    let qr = await QR.findOne({ shorthand: (req.body.shorthand).toLowerCase() });
 
     if (!qr) {
       throw new Error(`Invalid QR source`);
