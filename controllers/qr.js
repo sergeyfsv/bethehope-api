@@ -38,7 +38,6 @@ async function create(req, res) {
       organization: _.get(user, "organization"),
       dataUriSvg,
       url,
-      shorturl,
       poster: _.get(req, "body.poster", ""),
       description: _.get(req, "body.description", "")
     });
