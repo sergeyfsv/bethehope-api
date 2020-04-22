@@ -32,7 +32,7 @@ async function create(req, res) {
     dataUriSvg = _.replace(dataUriSvg, new RegExp("\n", "g"), "");
 
     let qr = await QR.create({
-      shorthand,
+      shorthand: shorthand.toLowerCase(),
       name,
       creator: user._id,
       organization: _.get(user, "organization"),
@@ -87,7 +87,7 @@ async function getQRInfo(req, res) {
       throw new Error(`QR shorthand not passed.`);
     }
 
-    qr = await QR.findOne({ shorthand: req.params.shorthand })
+    qr = await QR.findOne({ shorthand: (req.params.shorthand).toLowerCase() })
       .populate("organization")
       .select("shorthand name description poster");
 
