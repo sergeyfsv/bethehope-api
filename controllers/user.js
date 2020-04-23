@@ -7,7 +7,11 @@ let User = require("../models/user");
 
 async function create(req, res) {
   try {
-    let { name, email, password, role } = req.body;
+    let { name, email, password, role, key } = req.body;
+
+    if (process.env.BETHEHOPE_API_SECRET !== key) {
+      return res.status(403).send("Incorrect secret api key");
+    }
 
     if (!role) {
       role = constants.user.TYPE_MANAGER;

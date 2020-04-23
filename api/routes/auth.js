@@ -19,6 +19,7 @@ module.exports = app => {
         name: Joi.string().required(),
         email: Joi.string().required(),
         password: Joi.string().required(),
+        key: Joi.string().required(),
         role: Joi.string().valid(
           ...[constants.user.TYPE_MANAGER, constants.user.TYPE_MEMBER]
         )
